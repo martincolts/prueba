@@ -1,0 +1,35 @@
+package com.operativa.quartilegenerator.datamodel;
+
+import org.joda.time.LocalDate;
+
+public class DBRango {
+
+	public void insertRangoEntry(int idIndicador, LocalDate startDate,
+			LocalDate endDate, float minValue, float maxValue) {
+		DBManager dbM = DBManager.instance();
+		dbM.insert("INSERT INTO Rango(IdIndicador, FechaDesde, FechaHasta, ValorMaximo, ValorMinimo) VALUES("
+				+ Integer.toString(idIndicador)
+				+ ","
+				+ "#"
+				+ startDate.toString()
+				+ "#"
+				+ ","
+				+ "#"
+				+ endDate.toString()
+				+ "#"
+				+ ","
+				+ Float.toString(maxValue)
+				+ ","
+				+ Float.toString(minValue) + ")");
+	}
+
+	public void deleteRangoEntry(int idIndicador, LocalDate startDate,
+			LocalDate endDate) {
+		DBManager dbM = DBManager.instance();
+		dbM.executeUpdate("DELETE FROM Rango WHERE IdIndicador = "
+				+ Integer.toString(idIndicador) + " AND FechaDesde = " + "#"
+				+ startDate.toString() + "#" + " AND FechaHasta = " + "#"
+				+ endDate.toString() + "#");
+	}
+
+}

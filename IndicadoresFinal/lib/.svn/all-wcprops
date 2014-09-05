@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/10/trunk/QuartileGenerator/lib
+END
+jfreechart-1.0.14.jar
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/10/trunk/QuartileGenerator/lib/jfreechart-1.0.14.jar
+END
+hsqldb.jar
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/3/trunk/QuartileGenerator/lib/hsqldb.jar
+END
+commons-logging-1.0.4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/3/trunk/QuartileGenerator/lib/commons-logging-1.0.4.jar
+END
+jcommon-1.0.17.jar
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/10/trunk/QuartileGenerator/lib/jcommon-1.0.17.jar
+END
+jackcess-1.2.14.2.jar
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3/trunk/QuartileGenerator/lib/jackcess-1.2.14.2.jar
+END
+ucanaccess-1.0.4.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/3/trunk/QuartileGenerator/lib/ucanaccess-1.0.4.1.jar
+END
+commons-lang-2.4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/3/trunk/QuartileGenerator/lib/commons-lang-2.4.jar
+END
+joda-time-2.3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/3/trunk/QuartileGenerator/lib/joda-time-2.3.jar
+END

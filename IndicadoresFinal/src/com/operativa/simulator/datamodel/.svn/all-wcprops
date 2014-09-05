@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/18/trunk/QuartileGenerator/src/com/operativa/quartilegenerator/datamodel
+END
+DBManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/14/trunk/QuartileGenerator/src/com/operativa/quartilegenerator/datamodel/DBManager.java
+END
+CuartilEntry.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/!svn/ver/16/trunk/QuartileGenerator/src/com/operativa/quartilegenerator/datamodel/CuartilEntry.java
+END
+RangoEntry.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/16/trunk/QuartileGenerator/src/com/operativa/quartilegenerator/datamodel/RangoEntry.java
+END
+DBValorIndicador.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/14/trunk/QuartileGenerator/src/com/operativa/quartilegenerator/datamodel/DBValorIndicador.java
+END
+DBRango.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/14/trunk/QuartileGenerator/src/com/operativa/quartilegenerator/datamodel/DBRango.java
+END
+DBCuartil.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/14/trunk/QuartileGenerator/src/com/operativa/quartilegenerator/datamodel/DBCuartil.java
+END
+IndicatorEntry.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/14/trunk/QuartileGenerator/src/com/operativa/quartilegenerator/datamodel/IndicatorEntry.java
+END
+DBIndicador.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/18/trunk/QuartileGenerator/src/com/operativa/quartilegenerator/datamodel/DBIndicador.java
+END

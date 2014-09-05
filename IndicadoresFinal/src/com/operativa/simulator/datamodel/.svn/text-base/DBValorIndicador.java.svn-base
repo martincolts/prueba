@@ -1,0 +1,162 @@
+package com.operativa.quartilegenerator.datamodel;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.joda.time.LocalDate;
+
+@SuppressWarnings("deprecation")
+public class DBValorIndicador {
+
+	public DBValorIndicador() {
+
+	}
+
+	public LocalDate getMinDate() {
+		DBManager dbM = DBManager.instance();
+		ResultSet rs = dbM
+				.executeQuery("SELECT MIN(Fecha) AS FechaMin FROM ValorIndicador");
+		LocalDate result = null;
+		result = null;
+		try {
+			rs.next();
+			Date res = rs.getDate("FechaMin");
+			result = new LocalDate(res.getYear() + 1900, res.getMonth() + 1,
+					res.getDate());
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public LocalDate getMaxDate() {
+		DBManager dbM = DBManager.instance();
+		ResultSet rs = dbM
+				.executeQuery("SELECT MAX(Fecha) AS FechaMax FROM ValorIndicador");
+		LocalDate result = null;
+		result = null;
+		try {
+			rs.next();
+			Date res = rs.getDate("FechaMax");
+			result = new LocalDate(res.getYear() + 1900, res.getMonth() + 1,
+					res.getDate());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public LocalDate getMinDate(int idIndicador) {
+		DBManager dbM = DBManager.instance();
+		ResultSet rs = dbM
+				.executeQuery("SELECT MIN(Fecha) AS FechaMin FROM ValorIndicador WHERE IdIndicador = "
+						+ idIndicador);
+		LocalDate result = null;
+		result = null;
+		try {
+			rs.next();
+			Date res = rs.getDate("FechaMin");
+			result = new LocalDate(res.getYear() + 1900, res.getMonth() + 1,
+					res.getDate());
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public LocalDate getMaxDate(int idIndicador) {
+		DBManager dbM = DBManager.instance();
+		ResultSet rs = dbM
+				.executeQuery("SELECT MAX(Fecha) AS FechaMax FROM ValorIndicador WHERE IdIndicador = "
+						+ idIndicador);
+		LocalDate result = null;
+		result = null;
+		try {
+			rs.next();
+			Date res = rs.getDate("FechaMax");
+			result = new LocalDate(res.getYear() + 1900, res.getMonth() + 1,
+					res.getDate());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public List<IndicatorEntry> getRowsById(int id) {
+		DBManager dbM = DBManager.instance();
+		ResultSet rs = dbM
+				.executeQuery("SELECT IdIndicador, Fecha, Valor FROM ValorIndicador WHERE IdIndicador = "
+						+ Integer.toString(id));
+		List<IndicatorEntry> result = new LinkedList<IndicatorEntry>();
+		try {
+			while (rs.next()) {
+				Date res = rs.getDate("Fecha");
+				LocalDate date = new LocalDate(res.getYear() + 1900,
+						res.getMonth() + 1, res.getDate());
+				IndicatorEntry entry = new IndicatorEntry(
+						rs.getInt("IdIndicador"), rs.getFloat("Valor"), date,
+						"");
+				result.add(entry);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public List<IndicatorEntry> getRowsById(int id, LocalDate startDate,
+			LocalDate endDate) {
+		DBManager dbM = DBManager.instance();
+		ResultSet rs = dbM
+				.executeQuery("SELECT IdIndicador, Fecha, Valor FROM ValorIndicador WHERE IdIndicador = "
+						+ Integer.toString(id)
+						+ " AND "
+						+ "Fecha >= "
+						+ "#"
+						+ startDate.toString()
+						+ "#"
+						+ " AND Fecha <= "
+						+ "#"
+						+ endDate.toString() + "#");
+		List<IndicatorEntry> result = new LinkedList<IndicatorEntry>();
+		try {
+			while (rs.next()) {
+				Date res = rs.getDate("Fecha");
+				LocalDate date = new LocalDate(res.getYear() + 1900,
+						res.getMonth() + 1, res.getDate());
+				IndicatorEntry entry = new IndicatorEntry(
+						rs.getInt("IdIndicador"), rs.getFloat("Valor"), date,
+						"");
+				result.add(entry);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public void updateIndicatorStates(List<IndicatorEntry> indicators) {
+		DBManager dbM = DBManager.instance();
+		for (IndicatorEntry entry : indicators) {
+			dbM.executeUpdate("UPDATE ValorIndicador SET Estado = " + "'"
+					+ entry.getState() + "'" + " WHERE IdIndicador = "
+					+ Integer.toString(entry.getId()) + " AND Fecha = " + "#"
+					+ entry.getDate().toString() + "#");
+		}
+	}
+}

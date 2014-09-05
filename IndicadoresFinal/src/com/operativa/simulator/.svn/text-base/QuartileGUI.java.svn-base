@@ -1,0 +1,995 @@
+package com.operativa.quartilegenerator;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.util.LinkedList;
+import java.util.concurrent.ExecutionException;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.SwingWorker;
+
+import com.operativa.properties.Parameters;
+import com.operativa.properties.PropertyManager;
+import com.operativa.quartilegenerator.datamodel.CuartilEntry;
+import com.operativa.quartilegenerator.datamodel.DBCuartil;
+import com.operativa.quartilegenerator.datamodel.DBIndicador;
+import com.operativa.quartilegenerator.datamodel.DBRango;
+import com.operativa.quartilegenerator.datamodel.DBValorIndicador;
+import com.operativa.quartilegenerator.datamodel.IndicatorEntry;
+import com.operativa.quartilegenerator.datamodel.RangoEntry;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.File;
+
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.joda.time.LocalDate;
+
+import javax.swing.JCheckBox;
+
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+
+/**
+ * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
+ * Builder, which is free for non-commercial use. If Jigloo is being used
+ * commercially (ie, by a corporation, company or business for any purpose
+ * whatever) then you should purchase a license for each developer using Jigloo.
+ * Please visit www.cloudgarden.com for details. Use of Jigloo implies
+ * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
+ * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
+ * ANY CORPORATE OR COMMERCIAL PURPOSE.
+ */
+@SuppressWarnings("rawtypes")
+public class QuartileGUI extends JFrame {
+
+	{
+		// Set Look & Feel
+		try {
+			javax.swing.UIManager
+					.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			this.setTitle("QuartileGenerator");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 
+	 */
+
+	private static final long serialVersionUID = -3581904533316037480L;
+
+	private JComboBox comboBox;
+	private JComboBox comboBox_1;
+	private JTextField txtMinDate;
+	private JPanel panelGrafico1;
+	private JPanel panelPrevisual;
+	private JButton btnGuardar;
+	private JLabel labCantCuartiles;
+	private JLabel labCant;
+	private JScrollPane jScrollPane2;
+	private JTable tabPreview;
+	private JScrollPane jScrollPane1;
+	private JTable tabCuartiles;
+	private JLabel jLabel1;
+	private JLabel labP;
+	private JLabel labP2;
+	private JButton btR1;
+	private JButton btR2;
+	private JButton btR3;
+	private JPanel panelCuartiles;
+	private JPanel panelGrafico2;
+	private JTabbedPane jTabbedPane1;
+	private JPanel Principal;
+	private JTextField txtCant;
+	private JTextField txtMaxDate;
+	private JComboBox comboBox_2;
+	private JComboBox comboBox_3;
+	private JComboBox comboBox_4;
+	private JComboBox comboBox_5;
+	private JButton btnCalcular;
+	private JTable table_6;
+	private JTable table_7;
+	private JTable table_8;
+	private JLabel lblCantidad;
+	private JLabel lblFechaFinPeriodo;
+	private JLabel label_4;
+	private JCheckBox chckbxPeriodoUnco;
+	private LocalDate minDate;
+	private LocalDate maxDate;
+	private JTable table_9;
+	private JTable table_11;
+	private int valorbtR1;
+	private int valorbtR2;
+	private int valorbtR3;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					QuartileGUI frame = new QuartileGUI();
+					frame.setVisible(true);
+					frame.setLocationRelativeTo(null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	@SuppressWarnings({ "unchecked", "serial" })
+	public QuartileGUI() {
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(0, 0, 754, 412);
+		{
+			jTabbedPane1 = new JTabbedPane();
+			getContentPane().add(jTabbedPane1, BorderLayout.NORTH);
+			jTabbedPane1.setPreferredSize(new java.awt.Dimension(837, 346));
+			{
+				Principal = new JPanel();
+				jTabbedPane1.addTab("Principal", null, Principal, null);
+				Principal.setLayout(null);
+				Principal.setPreferredSize(new java.awt.Dimension(748, 316));
+				{
+					JLabel lblPeriodoMuestras = new JLabel("Periodo:");
+					Principal.add(lblPeriodoMuestras);
+					lblPeriodoMuestras.setBounds(479, 54, 107, 14);
+				}
+				{
+					comboBox_5 = new JComboBox();
+					Principal.add(comboBox_5);
+					comboBox_5.setBounds(550, 52, 88, 20);
+					comboBox_5.setModel(new DefaultComboBoxModel(Period
+							.values()));
+					comboBox_5.setSelectedIndex(2);
+					comboBox_5.setEnabled(false);
+					comboBox_5.setEditable(true);
+				}
+				{
+					JLabel lblIndicador = new JLabel("Indicador:");
+					Principal.add(lblIndicador);
+					lblIndicador.setBounds(15, 10, 62, 14);
+				}
+				{
+					comboBox = new JComboBox();
+					Principal.add(comboBox);
+					comboBox.setBounds(104, 7, 233, 20);
+					comboBox.addItemListener(new ItemListener() {
+						public void itemStateChanged(ItemEvent evt) {
+							
+							DBIndicador indicador = new DBIndicador();
+							
+							if (indicador.getDireccion(indicador.getIdByName(comboBox.getSelectedItem().toString()))==1){
+								comboBox_1.setSelectedIndex(0);
+								comboBox_4.setSelectedIndex(2);
+							} else{
+								comboBox_1.setSelectedIndex(2);
+								comboBox_4.setSelectedIndex(0);
+							}
+							
+							switch (indicador.getPeriodo(indicador
+									.getIdByName(comboBox.getSelectedItem()
+											.toString()))) {
+							case "diario":
+								comboBox_5.setSelectedIndex(0);
+								break;
+							case "mensual":
+								comboBox_5.setSelectedIndex(1);
+								break;
+							case "anual":
+								comboBox_5.setSelectedIndex(2);
+								break;
+															
+							}
+														
+
+							// Cambiar la fecha inicio y fin segun el indicador
+							DBValorIndicador vIndicador = new DBValorIndicador();
+							minDate = vIndicador.getMinDate(indicador
+									.getIdByName(comboBox.getSelectedItem()
+											.toString()));
+							maxDate = vIndicador.getMaxDate(indicador
+									.getIdByName(comboBox.getSelectedItem()
+											.toString()));
+							txtMinDate.setText(minDate.getDayOfMonth() + "/"
+									+ minDate.getMonthOfYear() + "/"
+									+ minDate.getYear());
+							txtMaxDate.setText(maxDate.getDayOfMonth() + "/"
+									+ maxDate.getMonthOfYear() + "/"
+									+ maxDate.getYear());
+
+						}
+					});
+				}
+				{
+					lblFechaFinPeriodo = new JLabel("Fecha fin periodo:");
+					Principal.add(lblFechaFinPeriodo);
+					lblFechaFinPeriodo.setBounds(256, 55, 116, 14);
+				}
+				{
+					JLabel lblFechaInicioPeriodo = new JLabel(
+							"Fecha inicio periodo:");
+					Principal.add(lblFechaInicioPeriodo);
+					lblFechaInicioPeriodo.setBounds(15, 55, 116, 14);
+				}
+				{
+					btnCalcular = new JButton("Calcular");
+					Principal.add(btnCalcular);
+					btnCalcular.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							btnCalcular.setEnabled(false);
+							int i = 0;
+							int minDia = Integer.parseInt(txtMinDate.getText()
+									.substring(
+											i,
+											i = txtMinDate.getText().indexOf(
+													"/", i)));
+							int minMes = Integer.parseInt(txtMinDate.getText()
+									.substring(
+											i + 1,
+											i = txtMinDate.getText().indexOf(
+													"/", i + 1)));
+							int minAno = Integer.parseInt(txtMinDate.getText()
+									.substring(i + 1));
+							minDate = new LocalDate(minAno, minMes, minDia);
+							if (chckbxPeriodoUnco.isSelected()) {
+								Integer amount = Integer.valueOf(txtCant
+										.getText());
+								String period = comboBox_5.getSelectedItem()
+										.toString();
+								int periodInDays = 0;
+								periodInDays = period.equals(Period.AÑO
+										.toString()) ? 365 * amount : 0;
+								periodInDays = period.equals(Period.MES
+										.toString()) ? 30 * amount
+										: periodInDays;
+								periodInDays = period.equals(Period.SEMANA
+										.toString()) ? 7 * amount
+										: periodInDays;
+								maxDate = minDate.plusDays(periodInDays);
+
+							} else {
+								i = 0;
+								int maxDia = Integer.parseInt(txtMaxDate
+										.getText().substring(
+												i,
+												i = txtMaxDate.getText()
+														.indexOf("/", i)));
+								int maxMes = Integer.parseInt(txtMaxDate
+										.getText().substring(
+												i + 1,
+												i = txtMaxDate.getText()
+														.indexOf("/", i + 1)));
+								int maxAno = Integer.parseInt(txtMaxDate
+										.getText().substring(i + 1));
+								maxDate = new LocalDate(maxAno, maxMes, maxDia);
+							}
+							// Mostrar u ocultar info cuartiles (segun periodo
+							// unico)
+							table_9.setVisible(chckbxPeriodoUnco.isSelected());
+							table_11.setVisible(chckbxPeriodoUnco.isSelected());
+							table_6.setVisible(chckbxPeriodoUnco.isSelected());
+							table_7.setVisible(chckbxPeriodoUnco.isSelected());
+							table_8.setVisible(chckbxPeriodoUnco.isSelected());
+							generateQuartiles();
+						}
+					});
+					btnCalcular.setBounds(450, 260, 90, 28);
+					btnCalcular.setEnabled(false);
+					btnCalcular.setText("Calcular");
+				}
+				{
+					JLabel lblDd = new JLabel("DD");
+					Principal.add(lblDd);
+					lblDd.setBounds(145, 35, 76, 14);
+					lblDd.setText("DD/MM/AAAA");
+				}
+				{
+					label_4 = new JLabel("DD");
+					Principal.add(label_4);
+					label_4.setBounds(375, 35, 76, 14);
+					label_4.setText("DD/MM/AAAA");
+				}
+				{
+					chckbxPeriodoUnco = new JCheckBox("Periodo \u00FAnico");
+					Principal.add(chckbxPeriodoUnco);
+					chckbxPeriodoUnco.addItemListener(new ItemListener() {
+						public void itemStateChanged(ItemEvent arg0) {
+							boolean state = arg0.getStateChange() == ItemEvent.SELECTED ? true
+									: false;
+							lblFechaFinPeriodo.setEnabled(!state);
+							label_4.setEnabled(!state);
+							txtMaxDate.setEnabled(!state);
+						}
+					});
+					chckbxPeriodoUnco.setBounds(136, 86, 125, 23);
+				}
+				{
+					lblCantidad = new JLabel("Cantidad:");
+					Principal.add(lblCantidad);
+					lblCantidad.setBounds(15, 91, 62, 14);
+				}
+				{
+					txtMinDate = new JTextField();
+					Principal.add(txtMinDate);
+					txtMinDate.setBounds(145, 52, 70, 25);
+				}
+				{
+					txtMaxDate = new JTextField();
+					Principal.add(txtMaxDate);
+					txtMaxDate.setBounds(374, 52, 70, 25);
+				}
+				{
+					txtCant = new JTextField();
+					Principal.add(txtCant);
+					txtCant.setText("1");
+					txtCant.setBounds(79, 85, 45, 25);
+				}
+				{
+					JLabel lblQ = new JLabel("Rango 1");
+					Principal.add(lblQ);
+					lblQ.setBounds(108, 152, 50, 14);
+				}
+				{
+					JLabel lblQ_1 = new JLabel("Rango 2");
+					Principal.add(lblQ_1);
+					lblQ_1.setBounds(245, 152, 50, 14);
+				}
+				{
+					JLabel lblQ_2 = new JLabel("Rango 3");
+					Principal.add(lblQ_2);
+					lblQ_2.setBounds(389, 152, 50, 14);
+				}
+				{
+					JLabel lblQ_3 = new JLabel("Rango 4");
+					Principal.add(lblQ_3);
+					lblQ_3.setBounds(529, 152, 50, 14);
+				}
+				{
+					comboBox_3 = new JComboBox();
+					Principal.add(comboBox_3);
+					comboBox_3.setBounds(371, 172, 95, 21);
+					comboBox_3.setModel(new DefaultComboBoxModel(IndicatorState
+							.values()));
+					comboBox_3.setSelectedIndex(1);
+				}
+				{
+					comboBox_2 = new JComboBox();
+					Principal.add(comboBox_2);
+					comboBox_2.setBounds(229, 172, 95, 21);
+					comboBox_2.setModel(new DefaultComboBoxModel(IndicatorState
+							.values()));
+					comboBox_2.setSelectedIndex(1);
+				}
+				{
+					comboBox_1 = new JComboBox();
+					Principal.add(comboBox_1);
+					comboBox_1.setBounds(90, 172, 95, 21);
+					comboBox_1.setModel(new DefaultComboBoxModel(IndicatorState
+							.values()));
+					comboBox_1.setSelectedIndex(0);
+					comboBox_1.setEditable(true);
+					comboBox_1.setEnabled(false);
+				}
+				{
+					comboBox_4 = new JComboBox();
+					Principal.add(comboBox_4);
+					comboBox_4.setBounds(512, 172, 95, 21);
+					comboBox_4.setModel(new DefaultComboBoxModel(IndicatorState
+							.values()));
+					comboBox_4.setSelectedIndex(2);
+					comboBox_4.setEnabled(false);
+				}
+				{
+					table_6 = new JTable();
+					Principal.add(table_6);
+					table_6.setModel(new DefaultTableModel(
+							new Object[][] { { null }, },
+							new String[] { "New column" }) {
+						Class[] columnTypes = new Class[] { Float.class };
+
+						public Class getColumnClass(int columnIndex) {
+							return columnTypes[columnIndex];
+						}
+
+						boolean[] columnEditables = new boolean[] { false };
+
+						public boolean isCellEditable(int row, int column) {
+							return columnEditables[column];
+						}
+					});
+					table_6.getColumnModel().getColumn(0).setResizable(false);
+					table_6.setBounds(175, 217, 75, 16);
+					table_6.setVisible(false);
+				}
+				{
+					table_7 = new JTable();
+					Principal.add(table_7);
+					table_7.setModel(new DefaultTableModel(
+							new Object[][] { { null }, },
+							new String[] { "New column" }) {
+						Class[] columnTypes = new Class[] { Float.class };
+
+						public Class getColumnClass(int columnIndex) {
+							return columnTypes[columnIndex];
+						}
+
+						boolean[] columnEditables = new boolean[] { false };
+
+						public boolean isCellEditable(int row, int column) {
+							return columnEditables[column];
+						}
+					});
+					table_7.getColumnModel().getColumn(0).setResizable(false);
+					table_7.setBounds(314, 217, 75, 16);
+					table_7.setVisible(false);
+				}
+				{
+					table_8 = new JTable();
+					Principal.add(table_8);
+					table_8.setModel(new DefaultTableModel(
+							new Object[][] { { null }, },
+							new String[] { "New column" }) {
+						Class[] columnTypes = new Class[] { Float.class };
+
+						public Class getColumnClass(int columnIndex) {
+							return columnTypes[columnIndex];
+						}
+
+						boolean[] columnEditables = new boolean[] { false };
+
+						public boolean isCellEditable(int row, int column) {
+							return columnEditables[column];
+						}
+					});
+					table_8.getColumnModel().getColumn(0).setResizable(false);
+					table_8.setBounds(454, 217, 75, 16);
+					table_8.setVisible(false);
+				}
+				{
+					JLabel lblQ_4 = new JLabel("Q1");
+					Principal.add(lblQ_4);
+					lblQ_4.setBounds(201, 195, 26, 14);
+				}
+				{
+					JLabel lblQ_5 = new JLabel("Q2");
+					Principal.add(lblQ_5);
+					lblQ_5.setBounds(341, 194, 20, 14);
+				}
+				{
+					JLabel lblQ_6 = new JLabel("Q3");
+					Principal.add(lblQ_6);
+					lblQ_6.setBounds(482, 194, 20, 14);
+				}
+				{
+					JLabel lblMin = new JLabel("MIN");
+					Principal.add(lblMin);
+					lblMin.setBounds(72, 194, 27, 14);
+				}
+				{
+					table_9 = new JTable();
+					Principal.add(table_9);
+					table_9.setModel(new DefaultTableModel(
+							new Object[][] { { null }, },
+							new String[] { "New column" }) {
+						Class[] columnTypes = new Class[] { Float.class };
+
+						public Class getColumnClass(int columnIndex) {
+							return columnTypes[columnIndex];
+						}
+
+						boolean[] columnEditables = new boolean[] { false };
+
+						public boolean isCellEditable(int row, int column) {
+							return columnEditables[column];
+						}
+					});
+					table_9.getColumnModel().getColumn(0).setResizable(false);
+					table_9.setBounds(44, 217, 75, 16);
+					table_9.setVisible(false);
+				}
+				{
+					table_11 = new JTable();
+					Principal.add(table_11);
+					table_11.setModel(new DefaultTableModel(
+							new Object[][] { { null }, },
+							new String[] { "New column" }) {
+						Class[] columnTypes = new Class[] { Float.class };
+
+						public Class getColumnClass(int columnIndex) {
+							return columnTypes[columnIndex];
+						}
+
+						boolean[] columnEditables = new boolean[] { false };
+
+						public boolean isCellEditable(int row, int column) {
+							return columnEditables[column];
+						}
+					});
+					table_11.getColumnModel().getColumn(0).setResizable(false);
+					table_11.setBounds(576, 217, 75, 16);
+					table_11.setVisible(false);
+				}
+				{
+					JLabel lblMax = new JLabel("MAX");
+					Principal.add(lblMax);
+					lblMax.setBounds(600, 194, 28, 14);
+				}
+				{
+					valorbtR1=1;
+					btR1 = new JButton();
+					Principal.add(btR1);
+					btR1.setText(")  -  [");
+					btR1.setBounds(184, 170, 47, 25);
+					btR1.setMargin(new java.awt.Insets(0, -5, 0, -5));
+					btR1.setFont(new java.awt.Font("SansSerif",1,13));
+					btR1.setHorizontalTextPosition(SwingConstants.CENTER);
+					btR1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							valorbtR1=valorbtR1*-1;
+							if (valorbtR1==-1)
+								btR1.setText("]  -  (");
+							else
+								btR1.setText(")  -  [");
+							//TODO add your code for btR1.actionPerformed
+						}
+					});
+
+				}
+				{
+					valorbtR2=1;
+					btR2 = new JButton();
+					Principal.add(btR2);
+					btR2.setBounds(325, 170, 47, 25);
+					btR2.setText(")  -  [");
+					btR2.setMargin(new java.awt.Insets(0, -5, 0, -5));
+					btR2.setFont(new java.awt.Font("SansSerif",1,13));
+					btR2.setHorizontalTextPosition(SwingConstants.CENTER);
+					btR2.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							valorbtR2=valorbtR2*-1;
+							if (valorbtR2==-1)
+								btR2.setText("]  -  (");
+							else
+								btR2.setText(")  -  [");
+						}
+					});
+				}
+				{
+					valorbtR3=1;
+					btR3 = new JButton();
+					Principal.add(btR3);
+					btR3.setBounds(465, 170, 47, 25);
+					btR3.setText(")  -  [");
+					btR3.setMargin(new java.awt.Insets(0, -5, 0, -5));
+					btR3.setFont(new java.awt.Font("SansSerif",1,13));
+					btR3.setHorizontalTextPosition(SwingConstants.CENTER);
+					btR3.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							valorbtR3=valorbtR3*-1;
+							if (valorbtR3==-1)
+								btR3.setText("]  -  (");
+							else
+								btR3.setText(")  -  [");
+						}
+					});
+				}
+				{
+					labP = new JLabel();
+					Principal.add(labP);
+					labP.setText("[");
+					labP.setBounds(86, 174, 10, 16);
+					labP.setFont(new java.awt.Font("SansSerif",1,13));
+				}
+				{
+					labP2 = new JLabel();
+					Principal.add(labP2);
+					labP2.setText("]");
+					labP2.setBounds(609, 174, 10, 16);
+					labP2.setFont(new java.awt.Font("SansSerif",1,13));
+				}
+				{
+					jLabel1 = new JLabel();
+					Principal.add(jLabel1);
+					jLabel1.setText("Limites:");
+					jLabel1.setBounds(16, 130, 44, 16);
+				}
+				{
+					btnGuardar = new JButton();
+					Principal.add(btnGuardar);
+					btnGuardar.setText("Guardar");
+					btnGuardar.setBounds(560, 260, 90, 28);
+					btnGuardar.setEnabled(false);
+					btnGuardar.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							
+							//Crear conecciones
+							DBValorIndicador valIn = new DBValorIndicador();
+							DBRango rango = new DBRango();
+							DBCuartil cuartil = new DBCuartil();
+							
+							//Actualizar la tabla de Valores
+							valIn.updateIndicatorStates(listValues);
+							
+							//Actualizar la tabla de Rangos
+							for (RangoEntry e : listRangos ){
+								//Borrar
+								rango.deleteRangoEntry(e.getId(), e.getFechaDesde(), e.getFechaHasta());
+								//Insertar
+								rango.insertRangoEntry(e.getId(), e.getFechaDesde(), e.getFechaHasta(), e.getMinimo(), e.getMaximo());
+							}
+							
+							//Actualizar la tabla de Cuartiles
+							for (CuartilEntry e : listCuartiles ){
+								//Borrar
+								cuartil.deleteCuartilEntry(e.getId(), e.getFechaDesde(), e.getFechaHasta());							
+							    //Insertar
+								cuartil.insertCuartilEntry(e.getId(), e.getFechaDesde(), e.getFechaHasta(),
+									e.getMinimo(), e.getQ1(), e.getQ2(),
+									e.getQ3(), e.getMaximo());
+							}
+						}
+					});
+				}
+			}
+			{
+				panelCuartiles = new JPanel();
+				jTabbedPane1.addTab("Cuartiles", null, panelCuartiles, null);
+				panelCuartiles.setPreferredSize(new java.awt.Dimension(748, 309));
+				{
+					jScrollPane1 = new JScrollPane();
+					panelCuartiles.add(jScrollPane1);
+					jScrollPane1.setPreferredSize(new java.awt.Dimension(745, 288));
+					{
+						TableModel tabCuartilesModel = 
+								new DefaultTableModel(
+										new String[][] { {  } },
+										new String[] { "Id Indicador", "Fecha Desde","Fecha Hasta", "Minimo", "Q1", "Q2", "Q3", "Maximo" });
+						tabCuartiles = new JTable();
+						jScrollPane1.setViewportView(tabCuartiles);
+						tabCuartiles.setModel(tabCuartilesModel);
+						
+					}
+				}
+				{
+					labCantCuartiles = new JLabel();
+					panelCuartiles.add(labCantCuartiles);
+				}
+			}
+			{
+				panelPrevisual = new JPanel();
+				jTabbedPane1.addTab("Valores Indicador", null, panelPrevisual, null);
+				FlowLayout panelPrevisualLayout = new FlowLayout();
+				panelPrevisual.setLayout(panelPrevisualLayout);
+				{
+					jScrollPane2 = new JScrollPane();
+					panelPrevisual.add(jScrollPane2);
+					jScrollPane2.setPreferredSize(new java.awt.Dimension(739, 290));
+					{
+						TableModel tabPreviewModel = 
+								new DefaultTableModel(
+										new String[][] { {} },
+										new String[] { "Id Indicador", "Fecha", "Valor", "Estado" });
+						tabPreview = new JTable();
+						jScrollPane2.setViewportView(tabPreview);
+						tabPreview.setModel(tabPreviewModel);
+					}
+				}
+				{
+					labCant = new JLabel();
+					panelPrevisual.add(labCant);
+				}
+			}
+			{
+				panelGrafico1 = new JPanel();
+				jTabbedPane1.addTab("Grafico de Torta", null, panelGrafico1,
+						null);
+			}
+			{
+				panelGrafico2 = new JPanel();
+				jTabbedPane1.addTab("Grafico de Barras", null, panelGrafico2,
+						null);
+			}
+		}
+
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+
+		JMenu mnArchivo = new JMenu("Archivo");
+		menuBar.add(mnArchivo);
+
+		JMenuItem mntmAbrir = new JMenuItem("Abrir");
+		mntmAbrir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						"*.mdb , *.accdb", "mdb", "accdb");
+				chooser.setFileFilter(filter);
+				chooser.setCurrentDirectory(new File("./"));
+				if (chooser.showOpenDialog(QuartileGUI.this) == JFileChooser.APPROVE_OPTION) {
+					comboBox.setModel(new DefaultComboBoxModel<>(
+							new String[] { "Cargando datos..." }));
+					loadData(chooser.getSelectedFile());
+
+				}
+			}
+		});
+		mnArchivo.add(mntmAbrir);
+
+	}
+
+	public void actualizarDatos() {
+		// Aca se actualiza todo en base a la lista de estados de los
+		// indicadores
+		System.out.println("Valores..");
+		for (IndicatorEntry i : listValues) {
+			System.out.println(i.getId() + " " + i.getValue() + " "
+					+ i.getState());
+		}
+		System.out.println("Cuartiles..");
+		for (CuartilEntry i : listCuartiles) {
+			System.out.println(i.getId() + " " + i.getFechaDesde() + " "
+					+ i.getFechaHasta());
+		}
+
+		previsualizar(listValues);
+		generarGraficos(listValues);
+		mostrarCuartiles(listCuartiles);
+
+	}
+
+	private void mostrarCuartiles(LinkedList<CuartilEntry> listCuartiles) {
+		// Mostrar cuartiles en el panel principal (solo se ven si esta
+		// chequeado Periodo unico)
+		table_9.setValueAt(listCuartiles.get(0).getMinimo(), 0, 0);
+		table_6.setValueAt(listCuartiles.get(0).getQ1(), 0, 0);
+		table_7.setValueAt(listCuartiles.get(0).getQ2(), 0, 0);
+		table_8.setValueAt(listCuartiles.get(0).getQ3(), 0, 0);
+		table_11.setValueAt(listCuartiles.get(0).getMaximo(), 0, 0);
+		
+		
+		//Cargar la table de cuartiles
+		String [][] data = new String[listCuartiles.size()][8];
+		int j=0;
+		for (CuartilEntry i : listCuartiles) {
+			
+			data[j][0]=String.valueOf(i.getId());
+			data[j][1]=String.valueOf(i.getFechaDesde());
+			data[j][2]=String.valueOf(i.getFechaHasta());
+			data[j][3]=String.valueOf(i.getMinimo());
+			data[j][4]=String.valueOf(i.getQ1());
+			data[j][5]=String.valueOf(i.getQ2());
+			data[j][6]=String.valueOf(i.getQ3());
+			data[j][7]=String.valueOf(i.getMaximo());			
+			j++;
+		}
+		TableModel tabCuartilesModel = 
+				new DefaultTableModel(
+						data,
+						new String[] { "Id Indicador", "Fecha Desde","Fecha Hasta", "Minimo", "Q1", "Q2", "Q3", "Maximo" });
+		tabCuartiles.setModel(tabCuartilesModel);	
+		
+		labCantCuartiles.setText("Cantidad: "+j);
+		
+	}
+
+	private void generarGraficos(LinkedList<IndicatorEntry> listValues) {
+		DefaultPieDataset dataPieChart = new DefaultPieDataset();
+		DefaultCategoryDataset dataBarChart = new DefaultCategoryDataset();
+		int rojo = 0, amarillo = 0, verde = 0;
+		//int[] cantidad = new int[listValues.size()];
+		for (IndicatorEntry ie : listValues) {
+			if (ie.getState().equals(IndicatorState.ROJO.toString()))
+				rojo++;
+			else if (ie.getState().equals(IndicatorState.AMARILLO.toString()))
+				amarillo++;
+			else
+				verde++;
+			dataBarChart.setValue(ie.getValue(),"Valor", ie.getDate());
+		}
+		dataPieChart.setValue("Rojo", rojo);
+		dataPieChart.setValue("Amarillo", amarillo);
+		dataPieChart.setValue("Verde", verde);
+		
+		// GRAFICO DE TORTA
+		JFreeChart pieChart = ChartFactory.createPieChart3D("Gráfico de Torta",
+				dataPieChart, true, true, true);
+		PiePlot piePlot = (PiePlot) pieChart.getPlot();
+		piePlot.setSectionPaint("Verde", Color.green);
+		piePlot.setSectionPaint("Rojo", Color.red);
+		piePlot.setSectionPaint("Amarillo", Color.yellow);		
+		pieChart.fireChartChanged();
+		JPanel panelPieChart = new ChartPanel(pieChart);
+		panelGrafico1.removeAll();
+		panelGrafico1.add(panelPieChart);
+		panelPieChart.setPreferredSize(new java.awt.Dimension(630, 309));
+
+		// GRAFICO DE BARRAS
+		JFreeChart barChart = ChartFactory.createBarChart("Gráfico de Barras",
+				"Fecha", "Valor", dataBarChart, PlotOrientation.VERTICAL, false,
+				true, false);
+		barChart.fireChartChanged();
+		JPanel panelBarChart = new ChartPanel(barChart);
+		panelGrafico2.removeAll();
+		panelGrafico2.add(panelBarChart);
+		panelBarChart.setPreferredSize(new java.awt.Dimension(750, 312));
+	}
+
+	private void previsualizar(LinkedList<IndicatorEntry> listValues) {
+		//Cargar la table de preview
+		String [][] data = new String[listValues.size()][8];
+		int j=0;
+		for (IndicatorEntry i : listValues) {
+			
+			data[j][0]=String.valueOf(i.getId());
+			data[j][1]=String.valueOf(i.getDate());
+			data[j][2]=String.valueOf(i.getValue());
+			data[j][3]=String.valueOf(i.getState());		
+			j++;
+		}
+		TableModel tabCuartilesModel = 
+				new DefaultTableModel(
+						data,
+						new String[] { "Id Indicador", "Fecha", "Valor", "Estado" });
+		tabPreview.setModel(tabCuartilesModel);
+		
+		labCant.setText("Cantidad: "+j);
+
+	}
+
+	static LinkedList<IndicatorEntry> listValues = new LinkedList<IndicatorEntry>();
+	static LinkedList<CuartilEntry> listCuartiles;
+	static LinkedList<RangoEntry> listRangos = new LinkedList<RangoEntry>();
+
+	public void generateQuartiles() {
+		final String indicatorName = comboBox.getSelectedItem().toString();
+		final String Q1Color = comboBox_1.getSelectedItem().toString();
+		final String Q2Color = comboBox_2.getSelectedItem().toString();
+		final String Q3Color = comboBox_3.getSelectedItem().toString();
+		final String Q4Color = comboBox_4.getSelectedItem().toString();
+		final String period = comboBox_5.getSelectedItem().toString();
+		final Integer amount = Integer.valueOf(txtCant.getText());
+
+		new SwingWorker<Void, Void>() {
+
+			@Override
+			protected Void doInBackground() throws Exception {
+				int periodInDays = 0;
+				periodInDays = period.equals(Period.AÑO.toString()) ? 365 * amount
+						: 0;
+				periodInDays = period.equals(Period.MES.toString()) ? 30 * amount
+						: periodInDays;
+				periodInDays = period.equals(Period.SEMANA.toString()) ? 7 * amount
+						: periodInDays;
+
+				QuartileGenerator qGenerator = new QuartileGenerator();
+
+				qGenerator.generateQuartilesList(indicatorName, Q1Color, Q2Color, Q3Color, Q4Color,
+						minDate, maxDate, periodInDays,valorbtR1,valorbtR2,valorbtR3);
+
+				qGenerator.generateQuartilesList(
+						indicatorName, Q1Color, Q2Color, Q3Color, Q4Color,
+						minDate, maxDate, periodInDays,valorbtR1,valorbtR2,valorbtR3);
+
+				
+				listCuartiles = qGenerator.listCuartiles;
+				listValues = qGenerator.listValues;
+				listRangos = qGenerator.listRangos;
+
+				actualizarDatos();
+
+				return null;
+
+			}
+
+			@Override
+			public void done() {
+				btnCalcular.setEnabled(true);
+				btnGuardar.setEnabled(true);
+			}
+
+		}.execute();
+
+	}
+
+	public void loadData(File dbPath) {
+		PropertyManager.instance().setProperty(Parameters.DB_NAME.toString(),
+				"jdbc:ucanaccess://" + dbPath.getAbsolutePath());
+
+		new SwingWorker<Object[], Void>() {
+
+			@Override
+			protected Object[] doInBackground() throws Exception {
+				DBValorIndicador vIndicador = new DBValorIndicador();
+				minDate = vIndicador.getMinDate();
+				maxDate = vIndicador.getMaxDate();
+				DBIndicador indicador = new DBIndicador();
+				return indicador.getIndicatorNames();
+			}
+
+			@SuppressWarnings({ "unchecked" })
+			@Override
+			public void done() {
+				try {
+					comboBox.setModel(new DefaultComboBoxModel<>(get()));
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+				}
+				// Cargar el valor de periodo del indicador
+				DBIndicador indicador = new DBIndicador();
+				switch (indicador.getPeriodo(indicador.getIdByName(comboBox
+						.getSelectedItem().toString()))) {
+				case "diario":
+					comboBox_5.setSelectedIndex(0);
+					break;
+				case "mensual":
+					comboBox_5.setSelectedIndex(1);
+					break;
+				case "anual":
+					comboBox_5.setSelectedIndex(2);
+					break;
+				}
+				//Cambiar direccion
+				
+				
+				if (indicador.getDireccion(indicador.getIdByName(comboBox.getSelectedItem().toString()))==1){
+					comboBox_1.setSelectedIndex(0);
+					comboBox_4.setSelectedIndex(2);
+				} else{
+					comboBox_1.setSelectedIndex(2);
+					comboBox_4.setSelectedIndex(0);
+				}
+				
+				// Cambiar la fecha inicio y fin segun el indicador
+				DBValorIndicador vIndicador = new DBValorIndicador();
+				minDate = vIndicador.getMinDate(indicador.getIdByName(comboBox
+						.getSelectedItem().toString()));
+				maxDate = vIndicador.getMaxDate(indicador.getIdByName(comboBox
+						.getSelectedItem().toString()));
+				txtMinDate.setText(minDate.getDayOfMonth() + "/"
+						+ minDate.getMonthOfYear() + "/" + minDate.getYear());
+				txtMaxDate.setText(maxDate.getDayOfMonth() + "/"
+						+ maxDate.getMonthOfYear() + "/" + maxDate.getYear());
+				
+				//Habilitar boton de Calcular
+				btnCalcular.setEnabled(true);
+			}
+		}.execute();
+		;
+	}
+}

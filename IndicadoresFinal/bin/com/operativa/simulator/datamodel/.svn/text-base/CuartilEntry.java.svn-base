@@ -1,0 +1,89 @@
+package com.operativa.quartilegenerator.datamodel;
+
+import org.joda.time.LocalDate;
+
+public class CuartilEntry {
+
+	private int id;
+	private float maximo;
+	private float minimo;
+	private float Q1;
+	private float Q2;
+	private float Q3;
+	private LocalDate fechaDesde;
+	private LocalDate fechaHasta;
+
+	public CuartilEntry(int id, LocalDate fechaDesde, LocalDate fechaHasta, float minimo, float Q1, float Q2, float Q3, float maximo) {
+		this.id = id;
+		this.setMaximo(maximo);
+		this.setFechaDesde(fechaDesde);
+		this.setFechaHasta(fechaHasta);
+		this.setQ1(Q1);
+		this.setQ2(Q2);
+		this.setQ3(Q3);		
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public float getMaximo() {
+		return maximo;
+	}
+
+	public void setMaximo(float maximo) {
+		this.maximo = maximo;
+	}
+
+	public float getMinimo() {
+		return minimo;
+	}
+
+	public void setMinimo(float minimo) {
+		this.minimo = minimo;
+	}
+
+	public LocalDate getFechaDesde() {
+		return fechaDesde;
+	}
+
+	public void setFechaDesde(LocalDate fechaDesde) {
+		this.fechaDesde = fechaDesde;
+	}
+
+	public LocalDate getFechaHasta() {
+		return fechaHasta;
+	}
+
+	public void setFechaHasta(LocalDate fechaHasta) {
+		this.fechaHasta = fechaHasta;
+	}
+
+	public float getQ3() {
+		return Q3;
+	}
+
+	public void setQ3(float q3) {
+		Q3 = q3;
+	}
+
+	public float getQ2() {
+		return Q2;
+	}
+
+	public void setQ2(float q2) {
+		Q2 = q2;
+	}
+
+	public float getQ1() {
+		return Q1;
+	}
+
+	public void setQ1(float q1) {
+		Q1 = q1;
+	}
+}

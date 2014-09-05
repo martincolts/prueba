@@ -1,0 +1,39 @@
+package com.operativa.quartilegenerator.datamodel;
+
+import org.joda.time.LocalDate;
+
+public class DBCuartil {
+
+	public void insertCuartilEntry(int idIndicador, LocalDate startDate,
+			LocalDate endDate, float minValue, float Q1, float median,
+			float Q3, float maxValue) {
+		DBManager dbM = DBManager.instance();
+		dbM.insert("INSERT INTO Cuartiles(IdIndicador, FechaDesde, FechaHasta, Minimo, Q1, Mediana, Q3, Maximo) VALUES("
+				+ Integer.toString(idIndicador)
+				+ ","
+				+ "#"
+				+ startDate.toString()
+				+ "#"
+				+ ","
+				+ "#"
+				+ endDate.toString()
+				+ "#"
+				+ ","
+				+ Float.toString(minValue)
+				+ ","
+				+ Float.toString(Q1)
+				+ ","
+				+ Float.toString(median)
+				+ ","
+				+ Float.toString(Q3) + "," + Float.toString(maxValue) + ")");
+	}
+
+	public void deleteCuartilEntry(int idIndicador, LocalDate startDate,
+			LocalDate endDate) {
+		DBManager dbM = DBManager.instance();
+		dbM.executeUpdate("DELETE FROM Cuartiles WHERE IdIndicador = "
+				+ Integer.toString(idIndicador) + " AND FechaDesde = " + "#"
+				+ startDate.toString() + "#" + " AND FechaHasta = " + "#"
+				+ endDate.toString() + "#");
+	}
+}

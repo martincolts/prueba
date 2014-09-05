@@ -1,0 +1,60 @@
+package com.operativa.quartilegenerator.datamodel;
+
+import org.joda.time.LocalDate;
+
+public class RangoEntry {
+
+	private int id;
+	private float maximo;
+	private float minimo;
+	private LocalDate fechaDesde;
+	private LocalDate fechaHasta;
+
+	public RangoEntry(int id, LocalDate fechaDesde, LocalDate fechaHasta, float maximo, float minimo) {
+		this.id = id;
+		this.setMaximo(maximo);
+		this.setMinimo(minimo);
+		this.setFechaDesde(fechaDesde);
+		this.setFechaHasta(fechaHasta);
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public float getMaximo() {
+		return maximo;
+	}
+
+	public void setMaximo(float maximo) {
+		this.maximo = maximo;
+	}
+
+	public float getMinimo() {
+		return minimo;
+	}
+
+	public void setMinimo(float minimo) {
+		this.minimo = minimo;
+	}
+
+	public LocalDate getFechaDesde() {
+		return fechaDesde;
+	}
+
+	public void setFechaDesde(LocalDate fechaDesde) {
+		this.fechaDesde = fechaDesde;
+	}
+
+	public LocalDate getFechaHasta() {
+		return fechaHasta;
+	}
+
+	public void setFechaHasta(LocalDate fechaHasta) {
+		this.fechaHasta = fechaHasta;
+	}
+}

@@ -1,0 +1,5 @@
+package com.operativa.quartilegenerator;
+
+public enum Period {
+	SEMANA, MES, AÑO
+}

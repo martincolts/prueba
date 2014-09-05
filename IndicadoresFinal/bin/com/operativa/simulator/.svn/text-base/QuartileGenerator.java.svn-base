@@ -1,0 +1,241 @@
+package com.operativa.quartilegenerator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+
+import com.operativa.quartilegenerator.datamodel.CuartilEntry;
+import com.operativa.quartilegenerator.datamodel.DBCuartil;
+import com.operativa.quartilegenerator.datamodel.DBIndicador;
+import com.operativa.quartilegenerator.datamodel.DBRango;
+import com.operativa.quartilegenerator.datamodel.DBValorIndicador;
+import com.operativa.quartilegenerator.datamodel.IndicatorEntry;
+import com.operativa.quartilegenerator.datamodel.RangoEntry;
+
+public class QuartileGenerator {
+
+	public QuartileGenerator() {
+
+	}
+	
+	public LinkedList<IndicatorEntry> listValues;
+	public LinkedList<CuartilEntry> listCuartiles;
+	public LinkedList<RangoEntry> listRangos;
+
+	public List<Float> getQuartileValues(String indicatorName,
+			LocalDate startDate, int periodInDays) {
+		DBIndicador in = new DBIndicador();
+		DBValorIndicador valIn = new DBValorIndicador();
+		int idIndicator = in.getIdByName(indicatorName);
+		List<IndicatorEntry> listByDate = valIn.getRowsById(idIndicator,
+				startDate, startDate.plusDays(periodInDays));
+		Collections.sort(listByDate);
+		int size = listByDate.size();
+		int q1Index = (int) Math.ceil(size / 4);
+		int q2Index = (int) Math.ceil((size * 2) / 4);
+		int q3Index = (int) Math.ceil((size * 3) / 4);
+		ArrayList<Float> list = new ArrayList<>(4);
+		list.add(0, listByDate.get(0).getValue());
+		list.add(1, listByDate.get(q1Index).getValue());
+		list.add(2, listByDate.get(q2Index).getValue());
+		list.add(3, listByDate.get(q3Index).getValue());
+		list.add(4, listByDate.get(listByDate.size() - 1).getValue());
+		return list;
+	}
+
+	public void generateQuartiles(String indicatorName, String Q1Color,
+			String Q2Color, String Q3Color, String Q4Color,
+			LocalDate startDate, LocalDate endDate, int periodInDays) {
+
+		DBIndicador in = new DBIndicador();
+		DBValorIndicador valIn = new DBValorIndicador();
+		DBRango rango = new DBRango();
+		DBCuartil cuartil = new DBCuartil();
+		int idIndicator = in.getIdByName(indicatorName);
+		List<IndicatorEntry> result = valIn.getRowsById(idIndicator, startDate,
+				endDate);
+		LinkedList<IndicatorEntry> listByDate = new LinkedList<>();
+		LocalDate plusDate;
+		while (!startDate.equals(endDate)) {
+			for (IndicatorEntry entry : result) {
+				if ((startDate.isBefore(entry.getDate()) || startDate
+						.isEqual(entry.getDate()))
+						&& Days.daysBetween(startDate, entry.getDate())
+								.getDays() <= periodInDays) {
+					listByDate.add(entry);
+				}
+			}
+
+			Collections.sort(listByDate);
+			int size = listByDate.size();
+			int q1Index = (int) Math.ceil(size / 4);
+			int q2Index = (int) Math.ceil((size * 2) / 4);
+			int q3Index = (int) Math.ceil((size * 3) / 4);
+			float q1Value = listByDate.get(q1Index).getValue();
+			float q2Value = listByDate.get(q2Index).getValue();
+			float q3Value = listByDate.get(q3Index).getValue();
+
+			for (IndicatorEntry entry : listByDate) {
+				if (entry.getValue() < q1Value) {
+					entry.setState(Q1Color);
+				} else if (entry.getValue() < q2Value) {
+					entry.setState(Q2Color);
+				} else if (entry.getValue() < q3Value) {
+					entry.setState(Q3Color);
+				} else {
+					entry.setState(Q4Color);
+				}
+			}
+
+			valIn.updateIndicatorStates(listByDate);
+			plusDate = startDate.plusDays(periodInDays);
+			plusDate = plusDate.isAfter(endDate) ? endDate : plusDate;
+			rango.deleteRangoEntry(idIndicator, startDate, plusDate);
+			cuartil.deleteCuartilEntry(idIndicator, startDate, plusDate);
+			float yellowStart, yellowEnd;
+			yellowStart = IndicatorState.AMARILLO.toString().equals(Q2Color) ? q1Value
+					: q2Value;
+			yellowEnd = IndicatorState.AMARILLO.toString().equals(Q3Color) ? q3Value
+					: q2Value;
+			rango.insertRangoEntry(idIndicator, startDate, plusDate,
+					yellowStart, yellowEnd);
+			cuartil.insertCuartilEntry(idIndicator, startDate, endDate,
+					listByDate.getFirst().getValue(), q1Value, q2Value,
+					q3Value, listByDate.getLast().getValue());
+			startDate = plusDate;
+			listByDate.clear();
+		}
+	}
+
+	public void generateQuartilesList(String indicatorName, String Q1Color,
+			String Q2Color, String Q3Color, String Q4Color, LocalDate startDate,
+			LocalDate endDate, int periodInDays, int valorbtR1, int valorbtR2, int valorbtR3){
+
+		DBIndicador in = new DBIndicador();
+		DBValorIndicador valIn = new DBValorIndicador();
+		
+		int idIndicator = in.getIdByName(indicatorName);
+		List<IndicatorEntry> result = valIn.getRowsById(idIndicator, startDate,
+				endDate);
+		
+		LinkedList<IndicatorEntry> listByDate = new LinkedList<IndicatorEntry>();
+		listValues = new LinkedList<IndicatorEntry>();
+		listCuartiles = new LinkedList<CuartilEntry>();
+		listRangos = new LinkedList<RangoEntry>();
+		
+		LocalDate plusDate;
+		while (!startDate.equals(endDate)) {
+			for (IndicatorEntry entry : result) {
+				if ((startDate.isBefore(entry.getDate()) || startDate
+						.isEqual(entry.getDate()))
+						&& Days.daysBetween(startDate, entry.getDate())
+								.getDays() < periodInDays) {
+					listByDate.add(entry);
+				}
+			}
+
+			Collections.sort(listByDate);
+			int size = listByDate.size();
+			if (size>0){
+				int q1Index = (int) Math.ceil(size / 4);
+				int q2Index = (int) Math.ceil((size * 2) / 4);
+				int q3Index = (int) Math.ceil((size * 3) / 4);
+				float q1Value = listByDate.get(q1Index).getValue();
+				float q2Value = listByDate.get(q2Index).getValue();
+				float q3Value = listByDate.get(q3Index).getValue();
+	
+				for (IndicatorEntry entry : listByDate) {
+					if (valorbtR1==1){
+						if (entry.getValue() < q1Value ) 
+							entry.setState(Q1Color);
+					}
+					else{
+						if (entry.getValue() <= q1Value ) 
+									entry.setState(Q1Color);							
+						}
+					
+					if (valorbtR1==1 && valorbtR2==1) 
+						if ((entry.getValue() >= q1Value) && (entry.getValue() < q2Value)) {
+								entry.setState(Q2Color);
+						}
+					
+					if (valorbtR1==1 && valorbtR2==-1) 
+						if ((entry.getValue() >= q1Value) && (entry.getValue() <= q2Value)) {
+								entry.setState(Q2Color);
+						}
+					
+					if (valorbtR1==-1 && valorbtR2==-1) 
+						if ((entry.getValue() > q1Value) && (entry.getValue() <= q2Value)) {
+								entry.setState(Q2Color);
+						}
+					if (valorbtR1==-1 && valorbtR2==1) 
+						if ((entry.getValue() > q1Value) && (entry.getValue() < q2Value)) {
+								entry.setState(Q2Color);
+						}
+					
+					if (valorbtR2==1 && valorbtR3==1) 
+						if ((entry.getValue() >= q2Value) && (entry.getValue() < q3Value)) {
+								entry.setState(Q3Color);
+						}
+					
+					if (valorbtR2==1 && valorbtR3==-1) 
+						if ((entry.getValue() >= q2Value) && (entry.getValue() <= q3Value)) {
+								entry.setState(Q3Color);
+						}
+					
+					if (valorbtR2==-1 && valorbtR3==-1) 
+						if ((entry.getValue() > q2Value) && (entry.getValue() <= q3Value)) {
+								entry.setState(Q3Color);
+						}
+					
+					if (valorbtR2==-1 && valorbtR3==1) 
+						if ((entry.getValue() > q2Value) && (entry.getValue() < q3Value)) {
+								entry.setState(Q3Color);
+						}
+					
+					if (valorbtR3==1) {
+						if (entry.getValue() >= q3Value) 
+								entry.setState(Q4Color);
+					}
+					 else
+						if (entry.getValue() > q3Value) {
+								entry.setState(Q4Color);
+						}
+				}
+				
+				
+				plusDate = startDate.plusDays(periodInDays);
+				plusDate = plusDate.isAfter(endDate) ? endDate : plusDate;
+				
+				//Caulcular inicio y fin de amarillo
+				float yellowStart, yellowEnd;
+				yellowStart = IndicatorState.AMARILLO.toString().equals(Q2Color) ? q1Value
+						: q2Value;
+				yellowEnd = IndicatorState.AMARILLO.toString().equals(Q3Color) ? q3Value
+						: q2Value;			
+				//Guardar Entrada de Rango
+				listRangos.add(new RangoEntry(idIndicator, startDate, plusDate,yellowStart, yellowEnd));
+				//Guardar Entrada de Cuartil
+				listCuartiles.add(new CuartilEntry(idIndicator, startDate, plusDate,//endDate,
+						listByDate.getFirst().getValue(), q1Value, q2Value,
+						q3Value, listByDate.getLast().getValue()));
+				}
+				else {
+					plusDate = startDate.plusDays(periodInDays);
+					plusDate = plusDate.isAfter(endDate) ? endDate : plusDate;
+				}
+			
+			
+			//Actualizar fecha			
+			startDate = plusDate;
+			
+			listValues.addAll(listByDate);
+			listByDate.clear();	
+		}
+	}
+	
+}
